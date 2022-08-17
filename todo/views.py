@@ -5,6 +5,7 @@ from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from .forms import TodoForm
 from django.contrib.auth import login
+from .models import Todo
 
 
 def home(request):
@@ -54,4 +55,5 @@ def createtodo(request):
         except ValueError:
             return render(request, 'todo/createtodo.html', {'form': TodoForm(), 'error':'Переданы не верные данные'})
 def currenttodos(request):
-    return render(request, 'todo/currenttodos.html')
+    todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
+    return render(request, 'todo/currenttodos.html',{'todos': todos})
